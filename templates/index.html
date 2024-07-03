@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кликер</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        #main {
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="main">
+        <h1>Кликер</h1>
+        <p>Счетчик: <span id="counter">0</span></p>
+        <button id="click-button">Кликнуть</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Получение текущего значения счетчика при загрузке страницы
+            fetch('/get_counter')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('counter').innerText = data.counter;
+                });
+
+            document.getElementById('click-button').addEventListener('click', function() {
+                fetch('/increment', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('counter').innerText = data.counter;
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
