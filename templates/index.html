@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Кликер</title>
     <style>
         body {
@@ -10,6 +10,8 @@
             text-align: center;
             margin: 0;
             padding: 0;
+            color: white;
+            background-color: black;
         }
         #main {
             padding: 20px;
@@ -29,20 +31,23 @@
         <button id="click-button">Кликнуть</button>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Получение текущего значения счетчика при загрузке страницы
-            fetch('/get_counter')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('counter').innerText = data.counter;
-                });
+        let counter = 0;
 
+        document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('click-button').addEventListener('click', function() {
-                fetch('/increment', { method: 'POST' })
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('counter').innerText = data.counter;
-                    });
+                counter++;
+                document.getElementById('counter').innerText = counter;
+
+                // Отправка данных обратно боту
+                Telegram.WebApp.sendData(counter.toString());
+            });
+
+            // Получение начального значения счетчика от бота
+            Telegram.WebApp.onEvent('initData', function(data) {
+                if (data.initData) {
+                    counter = parseInt(data.initData) || 0;
+                    document.getElementById('counter').innerText = counter;
+                }
             });
         });
     </script>
