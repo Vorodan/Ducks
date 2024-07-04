@@ -70,18 +70,18 @@
 </head>
 <body>
     <div id="loading">Загрузка...</div>
-    <div id="header" style="display:none;" onclick="loadSection('clicker')">
+    <div id="header" onclick="loadSection('clicker')">
         <h1>Ducks</h1>
     </div>
-    <div id="main" style="display:none;">
+    <div id="main">
         <h1>Кликер</h1>
         <p>Счетчик: <span id="counter">0</span></p>
         <button class="click-button" id="click-button"></button>
     </div>
-    <div id="footer" style="display:none;">
-        <a href="#" onclick="loadSection('shop')">Магазин</a>
-        <a href="#" onclick="loadSection('roulette')">Рулетка</a>
-        <a href="#" onclick="loadSection('skins')">Скины</a>
+    <div id="footer">
+        <a href="#" onclick="loadSection('shop'); return false;">Магазин</a>
+        <a href="#" onclick="loadSection('roulette'); return false;">Рулетка</a>
+        <a href="#" onclick="loadSection('skins'); return false;">Скины</a>
     </div>
     <script>
         let counter = 0;
@@ -97,11 +97,9 @@
                 counter++;
                 document.getElementById('counter').innerText = counter;
 
-                // Отправка данных обратно боту
                 Telegram.WebApp.sendData(counter.toString());
             });
 
-            // Получение начального значения счетчика от бота
             Telegram.WebApp.onEvent('initData', function(data) {
                 if (data.initData) {
                     counter = parseInt(data.initData) || 0;
@@ -131,7 +129,6 @@
                     counter++;
                     document.getElementById('counter').innerText = counter;
 
-                    // Отправка данных обратно боту
                     Telegram.WebApp.sendData(counter.toString());
                 });
             }
