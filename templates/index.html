@@ -70,7 +70,7 @@
 </head>
 <body>
     <div id="loading">Загрузка...</div>
-    <div id="header" style="display:none;">
+    <div id="header" style="display:none;" onclick="loadSection('clicker')">
         <h1>Ducks</h1>
     </div>
     <div id="main" style="display:none;">
@@ -79,10 +79,9 @@
         <button class="click-button" id="click-button"></button>
     </div>
     <div id="footer" style="display:none;">
-        <a href="index.html">Главная</a>
-        <a href="shop.html">Магазин</a>
-        <a href="roulette.html">Рулетка</a>
-        <a href="skins.html">Скины</a>
+        <a href="#" onclick="loadSection('shop')">Магазин</a>
+        <a href="#" onclick="loadSection('roulette')">Рулетка</a>
+        <a href="#" onclick="loadSection('skins')">Скины</a>
     </div>
     <script>
         let counter = 0;
@@ -110,6 +109,35 @@
                 }
             });
         });
+        function loadSection(section) {
+            let content = '';
+            switch(section) {
+                case 'shop':
+                    content = '<h1>Магазин</h1><p>Здесь будет контент магазина.</p>';
+                    break;
+                case 'roulette':
+                    content = '<h1>Рулетка</h1><p>Здесь будет контент рулетки.</p>';
+                    break;
+                case 'skins':
+                    content = '<h1>Скины</h1><p>Здесь будет контент скинов.</p>';
+                    break;
+                case 'clicker':
+                    content = '<h1>Кликер</h1><p>Счетчик: <span id="counter">' + counter + '</span></p><button class="click-button" id="click-button"></button>';
+                    break;
+                default:
+                    content = '<h1>Кликер</h1><p>Счетчик: <span id="counter">' + counter + '</span></p><button class="click-button" id="click-button"></button>';
+            }
+            document.getElementById('main').innerHTML = content;
+            if (section === 'clicker') {
+                document.getElementById('click-button').addEventListener('click', function() {
+                    counter++;
+                    document.getElementById('counter').innerText = counter;
+
+                    // Отправка данных обратно боту
+                    Telegram.WebApp.sendData(counter.toString());
+                });
+            }
+        }
     </script>
 </body>
 </html>
