@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ducks</title>
+    <style>
+        body {
+            font-family: 'Hero', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #FFD700;
+        }
+        #header {
+            background-color: #FFD700;
+            padding: 20px;
+            color: #000000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #main {
+            padding: 20px;
+        }
+        .click-button {
+            width: 150px;
+            height: 150px;
+            background-color: #000000;
+            color: #000000;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            background-image: url('https://github.com/Vorodan/Ducks/blob/Kirill_test/images/duck.jpg?raw=true');
+            background-size: cover;
+            background-position: center;
+        }
+        .click-button:hover {
+            background-color: #000000;
+        }
+        #footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #FFD700;
+            padding: 10px 0;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #footer a {
+            color: #000000;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        #footer a:hover {
+            text-decoration: underline;
+        }
+        #loading {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            color: #FFD700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="loading">Загрузка...</div>
+    <div id="header" onclick="loadSection('clicker')">
+        <h1>Ducks</h1>
+    </div>
+    <div id="main">
+        <h1>Кликер</h1>
+        <p>Счетчик: <span id="counter">0</span></p>
+        <button class="click-button" id="click-button"></button>
+    </div>
+    <div id="footer">
+        <a href="#" onclick="loadSection('shop'); return false;">Магазин</a>
+        <a href="#" onclick="loadSection('roulette'); return false;">Рулетка</a>
+        <a href="#" onclick="loadSection('skins'); return false;">Скины</a>
+    </div>
+    <script>
+        let counter = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Скрыть индикатор загрузки и показать контент
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('header').style.display = 'block';
+            document.getElementById('main').style.display = 'block';
+            document.getElementById('footer').style.display = 'block';
+
+            document.getElementById('click-button').addEventListener('click', function() {
+                counter++;
+                document.getElementById('counter').innerText = counter;
+
+                Telegram.WebApp.sendData(counter.toString());
+            });
+
+            Telegram.WebApp.onEvent('initData', function(data) {
+                if (data.initData) {
+                    counter = parseInt(data.initData) || 0;
+                    document.getElementById('counter').innerText = counter;
+                }
+            });
+        });
+        function loadSection(section) {
+            let content = '';
+            switch(section) {
+                case 'shop':
+                    content = '<h1>Магазин</h1><p>Здесь будет контент магазина.</p>';
+                    break;
+                case 'roulette':
+                    content = '<h1>Рулетка</h1><p>Здесь будет контент рулетки.</p>';
+                    break;
+                case 'skins':
+                    content = '<h1>Скины</h1><p>Здесь будет контент скинов.</p>';
+                    break;
+                case 'clicker':
+                    content = '<h1>Кликер</h1><p>Счетчик: <span id="counter">' + counter + '</span></p><button class="click-button" id="click-button"></button>';
+                    break;
+            }
+            document.getElementById('main').innerHTML = content;
+            if (section === 'clicker') {
+                document.getElementById('click-button').addEventListener('click', function() {
+                    counter++;
+                    document.getElementById('counter').innerText = counter;
+
+                    Telegram.WebApp.sendData(counter.toString());
+                });
+            }
+        }
+    </script>
+</body>
+</html>
